@@ -41,60 +41,58 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: BlocListener<CounterCubit, CounterState>(
-        listener: (context, state) {
-          if (state.isIncrement == true) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('INCREMENTED !!'),
-              duration: Duration(milliseconds: 500),
-            ));
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('DECREMENTED !!'),
-              duration: Duration(microseconds: 500),
-            ));
-          }
-        },
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'Counter value :',
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'Counter value :',
+            ),
+            BlocConsumer<CounterCubit, CounterState>(
+              listener: (context, state) {
+                if (state.isIncrement == true) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('INCREMENTED !!'),
+                    duration: Duration(milliseconds: 500),
+                  ));
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('DECREMENTED !!'),
+                    duration: Duration(microseconds: 500),
+                  ));
+                }
+              },
+              builder: (context, state) {
+                return Text(
+                  state.counterVal.toString(),
+                  style: Theme.of(context).textTheme.headline4,
+                );
+              },
+            ),
+            Container(
+              padding: const EdgeInsets.all(32),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FloatingActionButton(
+                    onPressed: () {
+                      BlocProvider.of<CounterCubit>(context).decrement();
+                    },
+                    tooltip: 'Increment',
+                    child: const Icon(Icons.remove),
+                  ),
+                  const SizedBox(width: 40),
+                  FloatingActionButton(
+                    onPressed: () {
+                      BlocProvider.of<CounterCubit>(context).increment();
+                    },
+                    tooltip: 'Increment',
+                    child: const Icon(Icons.add),
+                  ),
+                ],
               ),
-              BlocBuilder<CounterCubit, CounterState>(
-                builder: (context, state) {
-                  return Text(
-                    state.counterVal.toString(),
-                    style: Theme.of(context).textTheme.headline4,
-                  );
-                },
-              ),
-              Container(
-                padding: const EdgeInsets.all(32),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FloatingActionButton(
-                      onPressed: () {
-                        BlocProvider.of<CounterCubit>(context).decrement();
-                      },
-                      tooltip: 'Increment',
-                      child: const Icon(Icons.remove),
-                    ),
-                    const SizedBox(width: 40),
-                    FloatingActionButton(
-                      onPressed: () {
-                        BlocProvider.of<CounterCubit>(context).increment();
-                      },
-                      tooltip: 'Increment',
-                      child: const Icon(Icons.add),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
